@@ -13,4 +13,5 @@ typedef struct
 typedef struct
 {
     int ciclos;
+    __uint8_t* msg;
 } t_timer_args;

@@ -2,6 +2,7 @@
     "files.associations": {
         "unistd.h": "c",
         "thread_args.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "pthread.h": "c"
     }
 }
