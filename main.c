@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "Hilos/clock.c"
 #include "Hilos/timer.c"
+#include "Estructuras/processQueue.h"
 #include <string.h>
 
 int main (int argc, char *argv[]) {
@@ -9,6 +10,7 @@ int main (int argc, char *argv[]) {
         printf("Numero incorrecto de argumentos.\n");
         exit(1);
     }
+    pcb_max_size=512;
     pthread_t clock_id;
     pthread_t timer_id;
     pthread_t timer2_id;
