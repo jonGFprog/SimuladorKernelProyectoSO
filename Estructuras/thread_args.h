@@ -1,6 +1,6 @@
 #include <pthread.h>
 pthread_mutex_t mutex;
-int N_TEMP=1;
+int N_TEMP=2;
 int done;
 pthread_cond_t cond;
 pthread_cond_t cond2;
