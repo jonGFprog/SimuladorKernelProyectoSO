@@ -1,2 +1,2 @@
 politica Stalin:
-    
+    El partido asigna al proceso un tiempo de ejecución. En caso de no terminar en ese tiempo, se le ejecuta. Si termina antes del tiempo asignado no se mete ningun otro proceso a la cpu, el tiempo que asigna el partido es siempre perfecto.
