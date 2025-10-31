@@ -6,10 +6,29 @@
 #include <string.h>
 
 int main (int argc, char *argv[]) {
-    if(argc!=5){
-        printf("Numero incorrecto de argumentos.\n");
-        exit(1);
+    //valores por defecto
+    int procgen_frec=600;
+    int procgen_max_size=512;
+    int clk_frec=100000;
+    N_TEMP=0;
+    for(int i=0;i<argc;i++){
+        if(strcmp(argv[i],"--clock-frec")||strcmp(argv[i],"-f")){
+            i++;
+            clk_frec=atoi(argv[i]);
+        }
+        else if(strcmp(argv[i],"--procgen-frec")||strcmp(argv[i],"-F")){
+            i++;
+            procgen_frec=atoi(argv[i]);
+        }
+        else if(strcmp(argv[i],"--procgen-max-size")||strcmp(argv[i],"-S")){
+            i++;
+            procgen_max_size=atoi(argv[i]);
+        }
+        else{//timer
+            
+        }
     }
+
     pthread_t clock_id;
     pthread_t timer_id;
     pthread_t procgen_id;
