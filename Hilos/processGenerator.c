@@ -15,8 +15,9 @@ void* procgen_thread(void* args) {
     __uint64_t id=0;
     t_pcb pcb;
     while(1){
-        usleep((int)procgen_args->frec*0.8+(rand()%procgen_args->frec*0.4));
+        pthread_cond_wait(&cond_procgen,&mutex_procgen);
         pcb.id=id;
+        pcb.life=rand();
         if(enqueue_pcb(&process_queue,pcb)){
             printf("pcb %d añadido\n",pcb.id);
             id++;
