@@ -3,6 +3,9 @@
         "unistd.h": "c",
         "thread_args.h": "c",
         "stdio.h": "c",
-        "pthread.h": "c"
+        "pthread.h": "c",
+        "processqueue.h": "c",
+        "stdlib.h": "c",
+        "string.h": "c"
     }
 }

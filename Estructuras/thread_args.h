@@ -2,11 +2,13 @@
 #include <stdint.h>
 pthread_mutex_t mutex_clock;
 pthread_mutex_t mutex_procgen;
-int N_TEMP=1;
+pthread_mutex_t mutex_scheduler;
+int N_TEMP=2;
 int done;
 pthread_cond_t cond_clock;
 pthread_cond_t cond_clock2;
 pthread_cond_t cond_procgen;
+pthread_cond_t cond_scheduler;
 
 #define SIGPROCGEN SIGUSR1
 
@@ -30,3 +32,9 @@ typedef struct
     int max_size;
     int verbose;
 } t_procgen_args;
+
+typedef struct 
+{
+    int verbose;
+    //fase2
+} t_scheduler_args;
