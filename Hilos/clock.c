@@ -7,7 +7,9 @@
 #include <pthread.h>
 
 #endif
+
 void* clock_thread(void* args) {
+    pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
     __uint128_t i=0;
     pthread_mutex_init(&mutex_clock,NULL);
     t_clock_args *clock_args=args;

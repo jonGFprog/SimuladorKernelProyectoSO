@@ -9,7 +9,9 @@
 #include <pthread.h>
 
 #endif
+
 void* procgen_thread(void* args) {
+    pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
     t_procgen_args *procgen_args=args;
     t_pcb_queue process_queue;
     init_pcb_queue(&process_queue,procgen_args->max_size);
@@ -26,7 +28,7 @@ void* procgen_thread(void* args) {
         else{
             printf("pcb error\n");
         }
-        
     }
+    
 }
 

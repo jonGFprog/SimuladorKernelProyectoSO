@@ -9,9 +9,15 @@ typedef struct
 
 typedef struct 
 {
-    t_thread* threads;
+    t_core* threads;
     int count;
 }t_cpu;
+
+typedef struct 
+{
+    t_thread* threads;
+    int count;
+}t_core;
 
 typedef struct 
 {

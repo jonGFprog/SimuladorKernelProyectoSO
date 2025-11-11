@@ -1,16 +1,18 @@
 #include <pthread.h>
 #include <stdint.h>
+#include <signal.h> 
+#define SIGFIN SIGUSR1 
 pthread_mutex_t mutex_clock;
 pthread_mutex_t mutex_procgen;
 pthread_mutex_t mutex_scheduler;
 int N_TEMP=2;
 int done;
+
 pthread_cond_t cond_clock;
 pthread_cond_t cond_clock2;
 pthread_cond_t cond_procgen;
 pthread_cond_t cond_scheduler;
 
-#define SIGPROCGEN SIGUSR1
 
 typedef struct 
 {

@@ -7,7 +7,9 @@
 #include <pthread.h>
 
 #endif
+
 void* timer_thread(void* args) {
+    pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
     __uint32_t cont=0;
     t_timer_args *timer_args=args;
     pthread_cond_init((void *)timer_args->cond_timer,NULL);
@@ -28,5 +30,6 @@ void* timer_thread(void* args) {
 
 
     }
+        
 }
 

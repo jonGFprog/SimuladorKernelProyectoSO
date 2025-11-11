@@ -86,9 +86,44 @@ int main (int argc, char *argv[]) {
     pthread_create(&timer_scheduler_id,NULL,timer_thread, &timer_scheduler_args);    
     pthread_create(&scheduler_id,NULL,scheduler_thread, &scheduler_args);
     
-    pause();
-    /*pthread_join(timer_id,NULL);
-    pthread_join(timer2_id,NULL);    
+    
+    char buf[512];
+    while(1){
+        if(fgets(buf, sizeof(buf), stdin)!=NULL){
+            buf[strcspn(buf, "\n")] = 0;
+            if (strcmp(buf, "quit") == 0) {
+                break;
+            }
+        }
+    }
+    printf("Parando Kernel...\n");
+    pthread_cancel(scheduler_id);
+    pthread_join(scheduler_id,NULL);
+    printf("scheduler detenido...\n");
+
+    pthread_cancel(procgen_id);
+    pthread_join(procgen_id,NULL);
+    printf("processGenerator detenido...\n");
+
+    pthread_cancel(timer_procgen_id);
+    pthread_join(timer_procgen_id,NULL);
+    printf("timer del processGenerator detenido...\n");
+
+    pthread_cancel(timer_scheduler_id);
+    printf("a\n");
+    pthread_cond_broadcast(&cond_clock2);
+    pthread_mutex_unlock(&mutex_clock);
+    pthread_join(timer_scheduler_id,NULL);
+    printf("timer del scheduler detenido...\n");
+  
+    pthread_cancel(clock_id);
     pthread_join(clock_id,NULL);
-    pthread_join(procgen_id,NULL);*/
+    printf("clock detenido...\n");
+    
+    
+    
+      
+    
+    
+    
 }
