@@ -19,7 +19,10 @@ void* clock_thread(void* args) {
     printf("Reloj iniciado\n");
     
     while(1){
-        printf("ciclo %d\n",i);
+        if(clock_args->verbose){
+            printf("ciclo %d\n",i);
+        }
+        
         pthread_mutex_lock(&mutex_clock);
         while(done<N_TEMP){
             pthread_cond_wait(&cond_clock,&mutex_clock);

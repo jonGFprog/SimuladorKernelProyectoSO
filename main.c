@@ -67,7 +67,7 @@ int main (int argc, char *argv[]) {
     timer_procgen_args.msg="timer procgen";
     timer_procgen_args.cond_timer=(uintptr_t)&cond_procgen;
     timer_procgen_args.mutex_timer=(uintptr_t)&mutex_procgen;
-    timer_procgen_args.verbose=1;
+    timer_procgen_args.verbose=0;
     
     t_scheduler_args scheduler_args;
     scheduler_args.verbose=scheduler_verb;
@@ -77,7 +77,7 @@ int main (int argc, char *argv[]) {
     timer_scheduler_args.msg="timer scheduler";
     timer_scheduler_args.cond_timer=(uintptr_t)&cond_scheduler;
     timer_scheduler_args.mutex_timer=(uintptr_t)&mutex_scheduler;
-    timer_scheduler_args.verbose=1;
+    timer_scheduler_args.verbose=0;
     
 
     pthread_create(&clock_id,NULL,clock_thread, &clock_args);
@@ -110,7 +110,6 @@ int main (int argc, char *argv[]) {
     printf("timer del processGenerator detenido...\n");
 
     pthread_cancel(timer_scheduler_id);
-    printf("a\n");
     pthread_cond_broadcast(&cond_clock2);
     pthread_mutex_unlock(&mutex_clock);
     pthread_join(timer_scheduler_id,NULL);
@@ -119,11 +118,5 @@ int main (int argc, char *argv[]) {
     pthread_cancel(clock_id);
     pthread_join(clock_id,NULL);
     printf("clock detenido...\n");
-    
-    
-    
-      
-    
-    
     
 }

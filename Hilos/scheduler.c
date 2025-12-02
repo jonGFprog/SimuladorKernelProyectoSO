@@ -16,6 +16,7 @@ void* scheduler_thread(void* args) {
         if(scheduler_args->verbose){
             printf("scheduler activado\n");
         } 
+        
     }
             
 }
