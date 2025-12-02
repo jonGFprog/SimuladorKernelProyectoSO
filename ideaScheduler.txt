@@ -1,8 +1,29 @@
 politica Stalin:
-    El partido asigna al proceso un tiempo de ejecución. En caso de no terminar en ese tiempo, se le ejecuta. Si termina antes del tiempo asignado no se 
-    mete ningun otro proceso a la cpu, el tiempo que asigna el partido es siempre perfecto.
+    -El partido asigna al proceso un tiempo de ejecución maximo. En caso de no terminar en ese tiempo, se le ejecuta. 
+    -Si termina antes del tiempo asignado no se mete ningun otro proceso a la cpu, el tiempo que asigna el partido es siempre perfecto.
+    -Cada proceso tiene derecho a un numero de ciclos asignados por el lider antes de su expulsion de cpu.
+        -No es el numero maximo ciclos antes de la ejecucion, es el quantum.
+        -Los delirios del lider deciden el numero de ciclos (rand() dentro de un margen de valores (editables))
+        -Cada x numero de ciclos (editable) el lider decide el nuevo numero de ciclos
 
-    No hay prioridades porque todos son iguales, menos los procesos del partido, esos tienen mayor prioridad y no tienen limite de tiempo
+
+    No hay prioridades porque todos son iguales, menos los procesos del partido, esos tienen mayor prioridad, no tienen limite de tiempo y pueden expulsar a otros procesos
+
+    CPU:
+        -La loteria del trabajo decide a que CPU se asigna cada proceso
+        -Cada CPU tendra su propia cola de procesos, esta cola sigue la politica RR
+        -Tambien habra una cola de procesos del partido
+    
+    Expulsion
+        -Los procesos, al tener los mismos derechos, no pueden expulsar a otros.
+        -Un proceso del partido quiere la CPU, el proceso en CPU, por su lealtad al partido, saldra de la CPU dejandole paso al proceso del partido.
+        -Un proceso expulsado se pondra como ultimo de la cola
+        -Un proceso del partido no puede expulsar a otro del partido, pero, si el proceso tarda mas ciclos en salir de la CPU que paciencia tiene el 
+         proceso que quiere entrar, acusara al proceso en CPU de deslealtad al partido para que sea purgado.
+            -Si un proceso es acusado de deslealtad, se decidira aleatoriamente (probabilidad editable) si es o no culpable
+                -Si es culpable se le purga
+                -Si no es culpable se purga a quien lo acuso
+         
 
 
 ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⡿⠿⠛⠛⠛⠋⠉⠀⠀⠀⠀⠈⠉⠛⠻⢿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿

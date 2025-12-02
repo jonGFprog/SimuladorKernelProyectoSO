@@ -39,4 +39,11 @@ typedef struct
 {
     int verbose;
     //fase2
+    int partido; //0 si no es parte del partido, 1 si lo es
+    int ciclos_asignados; //ciclos maximos antes de su ejecucion publica
+    int ciclos_usados;  
+    int quantum; //tiempo de cpu asignado por el lider
+    int paciencia; //solo importante si es un proceso del partido
+    
+
 } t_scheduler_args;
