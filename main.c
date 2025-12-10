@@ -15,7 +15,9 @@ int main (int argc, char *argv[]) {
     int clk_verb=0;
     int timer_scheduler_frec=1;
     int scheduler_verb=0;
-
+    int cpus=2;
+    int cores=2;
+    int threads=2;
     
     for(int i=1;i<argc;i++){
         if(strcmp(argv[i],"--clock-frec")==0||strcmp(argv[i],"-cf")==0){
@@ -43,8 +45,21 @@ int main (int argc, char *argv[]) {
         else if(strcmp(argv[i],"--scheduler-verbose")==0||strcmp(argv[i],"-sV")==0){
             scheduler_verb=1;
         }
-        
+        else if(strcmp(argv[i],"--cpu-count")==0||strcmp(argv[i],"-Cc")==0){
+            i++;
+            cpus=atoi(argv[i]);
+        }
+        else if(strcmp(argv[i],"--cores-count")==0||strcmp(argv[i],"-cc")==0){
+            i++;
+            cores=atoi(argv[i]);
+        }
+        else if(strcmp(argv[i],"--threads-count")==0||strcmp(argv[i],"-tc")==0){
+            i++;
+            threads=atoi(argv[i]);
+        }
     }
+
+    init_machine(&machine, cpus,cores,threads);
 
     pthread_t clock_id;
     pthread_t timer_procgen_id;

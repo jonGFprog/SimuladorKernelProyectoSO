@@ -1,12 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
-#ifndef _thread_args_
-#define _thread_args_
-
 #include "../Estructuras/thread_args.h"
 #include <pthread.h>
-
-#endif
 
 void* clock_thread(void* args) {
     pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);

@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include <unistd.h>
-#ifndef _thread_args_
-#define _thread_args_
-
+#include "../Funciones/machine.c"
 #include "../Estructuras/thread_args.h"
 #include <pthread.h>
 
-#endif
+void dispacher(int cpu, int core, int thread, t_pcb pcb){
+    machine.cpus[cpu].cores[core].threads[thread].process=pcb;
+}
 
 void* scheduler_thread(void* args) {
     pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);

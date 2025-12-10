@@ -1,6 +1,10 @@
 #include <pthread.h>
 #include <stdint.h>
 #include <signal.h> 
+
+#ifndef THREAD_ARGS_H
+#define THREAD_ARGS_H
+
 #define SIGFIN SIGUSR1 
 pthread_mutex_t mutex_clock;
 pthread_mutex_t mutex_procgen;
@@ -45,3 +49,5 @@ typedef struct
 
 
 } t_scheduler_args;
+
+#endif
