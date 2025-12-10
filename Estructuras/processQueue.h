@@ -11,6 +11,8 @@ typedef struct{
     int max_size;
 } t_pcb_queue;
 
+t_pcb_queue process_queue;
+
 void init_pcb_queue(t_pcb_queue* pcb_queue, int size);
 int is_empty_pcb(t_pcb_queue* pcb_queue);
 int is_full_pcb(t_pcb_queue* pcb_queue);

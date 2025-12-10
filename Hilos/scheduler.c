@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include "../Funciones/machine.c"
+#include "../Funciones/processQueue.c"
 #include "../Estructuras/thread_args.h"
 #include <pthread.h>
 
@@ -11,10 +12,20 @@ void dispacher(int cpu, int core, int thread, t_pcb pcb){
 void* scheduler_thread(void* args) {
     pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
     t_scheduler_args *scheduler_args=args;
+    int cpu;
+    int core;
+    int thread;
+    t_pcb pcb;
     while(1){
+
         pthread_cond_wait(&cond_scheduler,&mutex_scheduler);
         if(scheduler_args->verbose){
             printf("scheduler activado\n");
+            dequeue_pcb(&process_queue,&pcb);
+            cpu=cpu % machine.count;
+            core=core % machine.cpus[0].count;
+            thread=thread % machine.cpus[0].cores[0].count;
+            dispacher(cpu,core,thread,pcb);
         } 
         
     }

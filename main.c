@@ -48,14 +48,26 @@ int main (int argc, char *argv[]) {
         else if(strcmp(argv[i],"--cpu-count")==0||strcmp(argv[i],"-Cc")==0){
             i++;
             cpus=atoi(argv[i]);
+            if (cpus<1){
+                printf("El numero de cpus debe ser mayor que 0");
+                exit(1);
+            }
         }
         else if(strcmp(argv[i],"--cores-count")==0||strcmp(argv[i],"-cc")==0){
             i++;
             cores=atoi(argv[i]);
+            if (cores<1){
+                printf("El numero de cores debe ser mayor que 0");
+                exit(1);
+            }
         }
         else if(strcmp(argv[i],"--threads-count")==0||strcmp(argv[i],"-tc")==0){
             i++;
             threads=atoi(argv[i]);
+            if (threads<1){
+                printf("El numero de hilos debe ser mayor que 0");
+                exit(1);
+            }
         }
     }
 
