@@ -19,19 +19,19 @@ typedef struct
 typedef struct 
 {
     t_thread* threads;
-    int count;
 }t_core;
 
 typedef struct 
 {
     t_core* cores;
-    int count;
 }t_cpu;
 
 typedef struct 
 {
     t_cpu* cpus;
-    int count;
+    int cpus_count;
+    int cores_count;
+    int threads_count;
     int *libres;
     int libres_size; //cpu*cores*threads
 } t_machine;
