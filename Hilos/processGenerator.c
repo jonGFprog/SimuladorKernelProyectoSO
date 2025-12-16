@@ -13,10 +13,10 @@ void* procgen_thread(void* args) {
     while(1){
         pthread_cond_wait(&cond_procgen,&mutex_procgen);
         pcb.id=id;
-        //pcb.life=rand();
         if(enqueue_pcb(&process_queue,pcb)){
             printf("pcb %d añadido\n",pcb.id);
             id++;
+            //pthread_cond_signal((void *)procgen_args->cond_sch);
         }
         else{
             printf("pcb error\n");

@@ -1,9 +1,19 @@
 #include "pcb.h"
+#include "processQueue.h"
 #ifndef MACHINE_H
 #define MACHINE_H
+
+typedef struct{
+    int cpu;
+    int core;
+    int thread;
+}t_select;
 typedef struct 
 {
     t_pcb process;
+    t_pcb_queue partido;
+    t_pcb_queue queue;
+    
 }t_thread;
 
 typedef struct 
@@ -22,6 +32,8 @@ typedef struct
 {
     t_cpu* cpus;
     int count;
+    int *libres;
+    int libres_size; //cpu*cores*threads
 } t_machine;
 
 t_machine machine;

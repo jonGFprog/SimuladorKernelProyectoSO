@@ -37,6 +37,7 @@ typedef struct
 {
     int max_size;
     int verbose;
+    uintptr_t cond_sch;
 } t_procgen_args;
 
 typedef struct 

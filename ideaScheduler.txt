@@ -10,7 +10,10 @@ politica Stalin:
     No hay prioridades porque todos son iguales, menos los procesos del partido, esos tienen mayor prioridad, no tienen limite de tiempo y pueden expulsar a otros procesos
 
     CPU:
-        -La loteria del trabajo decide a que CPU se asigna cada proceso
+        -Para decidir a que hilo se asigna cada proceso
+            -Usa un bitmap para saber si esta libre el hilo
+            -Elije el primero que esta libre
+            -Si no, elije el que menos procesos tenga pendientes
         -Cada CPU tendra su propia cola de procesos, esta cola sigue la politica RR
         -Tambien habra una cola de procesos del partido
     

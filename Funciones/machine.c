@@ -2,6 +2,12 @@
 
 void init_machine(t_machine *machine, int cpus, int cores, int threads){
     machine->count=cpus;
+    int size=cpus*cores*threads;
+    machine->libres_size=size;
+    machine->libres=malloc(size*sizeof(int));
+    for(int i=0;i<size;i++){
+        machine->libres[i]=0;
+    }
     for(int i=0;i<cpus;i++){
         machine->cpus=malloc(cpus*sizeof(t_cpu));
         for(int j=0;j<cores;j++){
