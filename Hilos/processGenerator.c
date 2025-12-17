@@ -8,7 +8,7 @@ void* procgen_thread(void* args) {
     pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
     t_procgen_args *procgen_args=args;
     init_pcb_queue(&process_queue,procgen_args->max_size);
-    __uint64_t id=0;
+    __uint64_t id=1;
     t_pcb pcb;
     while(1){
         pthread_cond_wait(&cond_procgen,&mutex_procgen);
