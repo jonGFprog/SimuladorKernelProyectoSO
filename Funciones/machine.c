@@ -7,6 +7,7 @@ void init_machine(t_machine *machine, int cpus, int cores, int threads, int queu
     machine->threads_count=threads;
     int size=cpus*cores*threads;
     machine->total_threads=size;
+    machine->quantum=150;
     machine->cpus=malloc(cpus*sizeof(t_cpu));
     for(int i=0;i<cpus;i++){
         machine->cpus[i].cores=malloc(cores*sizeof(t_core));
@@ -22,20 +23,20 @@ void init_machine(t_machine *machine, int cpus, int cores, int threads, int queu
 }
 
 void print_machine(t_machine *machine){
+    int cpu,core,thread;
     for(int i=0;i<machine->cpus_count;i++){
         for(int j=0;j<machine->cores_count;j++){
             for(int k=0;k<machine->threads_count;k++){
                 printf("\n+-------------------------------------------------+\n");
-                printf("|                     thread %d                   |\n",(i+1)*(j+1)*(k+1));
-                printf("|              core %d         cpu %d             |\n",i,j);
-                printf("|         pcb ejecucion id %d                     |\n",machine->cpus[i].cores[j].threads[k].process.id);
-                printf("|                     queue:                      |\n");
+                printf("|         cpu %d      core %d    thread %d          |\n",i,j,k);
+                printf("|           pcb ejecucion id %d                     |\n",machine->cpus[i].cores[j].threads[k].process.id);
+                printf("|                       queue:                      |\n");
                 for(int l=0;l<machine->cpus[i].cores[j].threads[k].queue.size;l++){
-                printf("|         pcb cola id %d                          |\n",machine->cpus[i].cores[j].threads[k].queue.pcb[l].id);
+                printf("|           pcb cola id %d                          |\n",machine->cpus[i].cores[j].threads[k].queue.pcb[l].id);
                 }
-                printf("|                     partido:                    |\n");
+                printf("|                      partido:                     |\n");
                 for(int l=0;l<machine->cpus[i].cores[j].threads[k].partido.size;l++){
-                printf("|         pcb cola id %d                          |\n",machine->cpus[i].cores[j].threads[k].partido.pcb[l].id);
+                printf("|           pcb cola id %d                          |\n",machine->cpus[i].cores[j].threads[k].partido.pcb[l].id);
                 }
                 printf("+-------------------------------------------------+\n");
             }   

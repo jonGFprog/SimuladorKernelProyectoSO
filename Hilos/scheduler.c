@@ -6,14 +6,14 @@
 #include <pthread.h>
 
 
-void dispacher(int cpu, int core, int thread, t_pcb pcb, t_pcb *exit_pcb){
+void dispacher(int cpu, int core, int thread, t_pcb pcb, t_pcb *exit_pcb, int verbose){
     /*  machine.cpus[cpu].cores[core].threads[thread].process=pcb;
     if(machine.libres[cpu*core*thread-1]>0){
         machine.libres[cpu*core*thread-1]--;
     }*/
     *exit_pcb=machine.cpus[cpu].cores[core].threads[thread].process;
     machine.cpus[cpu].cores[core].threads[thread].process=pcb;
-    printf("PCB id:%d asignado a %d,%d,%d\n",machine.cpus[cpu].cores[core].threads[thread].process.id,cpu,core,thread);
+    if(verbose) printf("PCB id:%d asignado a %d,%d,%d\n",machine.cpus[cpu].cores[core].threads[thread].process.id,cpu,core,thread);
 
 }
 
@@ -63,7 +63,6 @@ void* scheduler_thread(void* args) { //quizas cambiar el scheduler de hilo a fun
     t_scheduler_args *scheduler_args=args;
     t_pcb pcb;
     t_select select;
-    int quantum=0;
     int cpu,core,thread;
     while(1){
 
@@ -74,9 +73,11 @@ void* scheduler_thread(void* args) { //quizas cambiar el scheduler de hilo a fun
             asignar_trabajo(&select,pcb.partido);
             if(pcb.partido){
                 enqueue_pcb(&machine.cpus[select.cpu].cores[select.core].threads[select.thread].partido,pcb);
+                if(scheduler_args->verbose){printf("pcb %d añadido al partido (%d,%d,%d)\n",pcb.id,select.cpu,select.core,select.thread);} 
             }
             else{
                 enqueue_pcb(&machine.cpus[select.cpu].cores[select.core].threads[select.thread].queue,pcb);
+                if(scheduler_args->verbose){printf("pcb %d añadido a la queue (%d,%d,%d)\n",pcb.id,select.cpu,select.core,select.thread);}
             }
             
         }
@@ -93,9 +94,10 @@ void* scheduler_thread(void* args) { //quizas cambiar el scheduler de hilo a fun
                 else{
                     pcb=pcbnulo;
                 }
-                dispacher(cpu,core,thread,pcb,&pcb);
+                dispacher(cpu,core,thread,pcb,&pcb,scheduler_args->verbose);
                 if(pcb.ciclos_asignados<pcb.ciclos_usados){
                     enqueue_pcb(&machine.cpus[cpu].cores[core].threads[thread].queue, pcb);
+                    if(scheduler_args->verbose){printf("reasignando pcb %d a la queue (%d,%d,%d)\n",pcb.id,cpu,core,thread);}
                 }
             }
             
