@@ -17,6 +17,10 @@ void* clock_thread(void* args) {
         if(clock_args->verbose){
             printf("ciclo %d\n",i);
         }
+        if(pausa){
+            pthread_cond_wait(&cond_pausa,&mutex_pausa);
+        }
+        
         
         pthread_mutex_lock(&mutex_clock);
         while(done<N_TEMP){

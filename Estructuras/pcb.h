@@ -11,6 +11,8 @@ typedef struct
     uint8_t fin; //fin=0 representa que aun no ha terminado el proceso, fin=1 representa que el proceso ha terminado
     uint16_t quantum; //contador del quantum, compararlo con machine.quantum
 } t_pcb;
+
+t_pcb pcbnulo;
 #endif
 
 

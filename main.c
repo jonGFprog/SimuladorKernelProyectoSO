@@ -7,13 +7,18 @@
 #include <string.h>
 
 int main (int argc, char *argv[]) {
+    pcbnulo.id=0;
+    pcbnulo.quantum=0;
+    pcbnulo.fin=7;
+    pcbnulo.ciclos_asignados=UINT16_MAX;
+    pcbnulo.ciclos_usados=0;
     //valores por defecto
     int timer_procgen_frec=32; //(ciclos de reloj para que el timer interrumpa)
     int procgen_max_size=512;
     int procgen_verb=0;
     int clk_frec=100000;
     int clk_verb=0;
-    int timer_scheduler_frec=1;
+    int timer_scheduler_frec=30;
     int scheduler_verb=0;
     int cpus=2;
     int cores=2;
@@ -71,7 +76,10 @@ int main (int argc, char *argv[]) {
         }
     }
 
-    init_machine(&machine, cpus,cores,threads);
+    init_machine(&machine, cpus,cores,threads,150); //numero arbitrario temporal
+    pthread_mutex_init(&mutex_pausa,NULL);
+    pthread_cond_init(&cond_pausa,NULL);
+    pausa=0;
 
     pthread_t clock_id;
     pthread_t timer_procgen_id;
@@ -120,6 +128,20 @@ int main (int argc, char *argv[]) {
             buf[strcspn(buf, "\n")] = 0;
             if (strcmp(buf, "quit") == 0) {
                 break;
+            }
+            else if(strcmp(buf, "print") == 0){
+                print_machine(&machine);
+            }
+            else if(strcmp(buf, "p") == 0){
+                printf("\nPAUSA\n");
+                pthread_mutex_lock(&mutex_pausa);
+                pausa=1;
+            }
+            else if(strcmp(buf, "c") == 0){
+                printf("\nCONTINUE\n");
+                pausa=0;
+                pthread_mutex_unlock(&mutex_pausa);
+                pthread_cond_broadcast(&cond_pausa);
             }
         }
     }

@@ -13,6 +13,7 @@ void dispacher(int cpu, int core, int thread, t_pcb pcb, t_pcb *exit_pcb){
     }*/
     *exit_pcb=machine.cpus[cpu].cores[core].threads[thread].process;
     machine.cpus[cpu].cores[core].threads[thread].process=pcb;
+    printf("PCB id:%d asignado a %d,%d,%d\n",machine.cpus[cpu].cores[core].threads[thread].process.id,cpu,core,thread);
 
 }
 
@@ -57,46 +58,49 @@ void asignar_trabajo(t_select *select, uint8_t partido){
     }
 }
 
-void* scheduler_thread(void* args) {
+void* scheduler_thread(void* args) { //quizas cambiar el scheduler de hilo a funcion
     pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
     t_scheduler_args *scheduler_args=args;
     t_pcb pcb;
     t_select select;
     int quantum=0;
+    int cpu,core,thread;
     while(1){
 
         pthread_cond_wait(&cond_scheduler,&mutex_scheduler);
         if(scheduler_args->verbose){printf("scheduler activado\n");} 
         while(!is_empty_pcb(&process_queue)){
-            dequeue_pcb(&process_queue,&pcb);//falta comprobar si es del partido y asignarlo a la cola del partido si lo es
+            dequeue_pcb(&process_queue,&pcb);
             asignar_trabajo(&select,pcb.partido);
-            enqueue_pcb(&machine.cpus[select.cpu].cores[select.core].threads[select.thread].queue,pcb);
-        }
-        for(int i=0;i<machine.total_threads;i++){
-
-        }
-        /*if(quantum>=machine.quantum){
-            dispacher(select.cpu,select.core,select.thread,pcb,&pcb); //t_pcb pcb pasa de ser el pcb que entra en la cpu por el que sale
-            quantum=0;
-            if(pcb.ciclos_usados >= pcb.ciclos_asignados){
-                continue;
+            if(pcb.partido){
+                enqueue_pcb(&machine.cpus[select.cpu].cores[select.core].threads[select.thread].partido,pcb);
             }
-            if(pcb.fin==0){
-                pcb.ciclos_usados+=machine.quantum;
+            else{
                 enqueue_pcb(&machine.cpus[select.cpu].cores[select.core].threads[select.thread].queue,pcb);
             }
-
-        }
-        else quantum++;*/
-        
-            /*
-            cpu=cpu % machine.count;
-            core=core % machine.cpus[0].count;
-            thread=thread % machine.cpus[0].cores[0].count;
-            dispacher(cpu,core,thread,pcb);*/
             
-        
-        
+        }
+        for(int i=0;i<machine.total_threads;i++){ //falta que hacer si es del partido
+            cpu=i/(machine.cores_count*machine.threads_count);
+            core=(i/machine.threads_count)%machine.cores_count;
+            thread=i%machine.threads_count;
+            if(!machine.cpus[cpu].cores[core].threads[thread].process.id==0) machine.cpus[cpu].cores[core].threads[thread].process.quantum+=scheduler_args->ciclos_timer;//TEMPORAL, TIENE QUE AUMENTAR EL QUANTUM EN LA EJECUCION NO EN EL SCHEDULER
+            if(is_empty_pcb(&machine.cpus[cpu].cores[core].threads[thread].queue) && is_empty_pcb(&machine.cpus[cpu].cores[core].threads[thread].partido) && machine.cpus[cpu].cores[core].threads[thread].process.id==0)continue;
+            if(machine.cpus[cpu].cores[core].threads[thread].process.quantum>=machine.quantum){ //Si se acaba el quantum
+                if(!is_empty_pcb(&machine.cpus[cpu].cores[core].threads[thread].queue)){
+                   dequeue_pcb(&machine.cpus[cpu].cores[core].threads[thread].queue, &pcb); 
+                }
+                else{
+                    pcb=pcbnulo;
+                }
+                dispacher(cpu,core,thread,pcb,&pcb);
+                if(pcb.ciclos_asignados<pcb.ciclos_usados){
+                    enqueue_pcb(&machine.cpus[cpu].cores[core].threads[thread].queue, pcb);
+                }
+            }
+            
+        }
+   
     }
             
 }

@@ -38,5 +38,6 @@ typedef struct
 } t_machine;
 
 t_machine machine;
-void init_machine(t_machine *machine, int cpus, int cores, int threads);
+void init_machine(t_machine *machine, int cpus, int cores, int threads,int queue_size);
+void print_machine(t_machine *machine);
 #endif

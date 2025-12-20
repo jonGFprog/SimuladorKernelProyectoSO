@@ -1,4 +1,6 @@
 #include "../Estructuras/processQueue.h"
+#ifndef PROCESS_QUEUE_C
+#define PROCESS_QUEUE_C
 
 void init_pcb_queue(t_pcb_queue* pcb_queue, int size){
     pcb_queue->pcb = (t_pcb*)malloc(sizeof(t_pcb)* size);
@@ -47,3 +49,4 @@ int peek_pcb(t_pcb_queue* pcb_queue, t_pcb* pcb){
     *pcb=pcb_queue->pcb[pcb_queue->first];
     return 1;
 }
+#endif

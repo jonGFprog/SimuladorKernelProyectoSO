@@ -3,6 +3,7 @@
 #include "../Funciones/processQueue.c"
 #include "../Estructuras/thread_args.h"
 #include <pthread.h>
+#include "../Funciones/machine.c"
 
 void* procgen_thread(void* args) {
     pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
@@ -13,6 +14,11 @@ void* procgen_thread(void* args) {
     while(1){
         pthread_cond_wait(&cond_procgen,&mutex_procgen);
         pcb.id=id;
+        pcb.ciclos_asignados=machine.quantum*5; //temporal
+        pcb.ciclos_usados=0;
+        pcb.quantum=0;
+        pcb.fin=0;
+        pcb.partido=0;
         if(enqueue_pcb(&process_queue,pcb)){
             printf("pcb %d añadido\n",pcb.id);
             id++;
