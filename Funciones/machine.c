@@ -32,11 +32,11 @@ void print_machine(t_machine *machine){
                 printf("|           pcb ejecucion id %d                     |\n",machine->cpus[i].cores[j].threads[k].process.id);
                 printf("|                       queue:                      |\n");
                 for(int l=0;l<machine->cpus[i].cores[j].threads[k].queue.size;l++){
-                printf("|           pcb cola id %d                          |\n",machine->cpus[i].cores[j].threads[k].queue.pcb[l].id);
+                printf("|           pcb cola id %d                          |\n",machine->cpus[i].cores[j].threads[k].queue.pcb[machine->cpus[i].cores[j].threads[k].queue.first + l].id);
                 }
                 printf("|                      partido:                     |\n");
                 for(int l=0;l<machine->cpus[i].cores[j].threads[k].partido.size;l++){
-                printf("|           pcb cola id %d                          |\n",machine->cpus[i].cores[j].threads[k].partido.pcb[l].id);
+                printf("|           pcb cola id %d                          |\n",machine->cpus[i].cores[j].threads[k].partido.pcb[machine->cpus[i].cores[j].threads[k].partido.first + l].id);
                 }
                 printf("+-------------------------------------------------+\n");
             }   

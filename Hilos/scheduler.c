@@ -26,7 +26,7 @@ void asignar_trabajo(t_select *select, uint8_t partido){
             cpu=i/(machine.cores_count*machine.threads_count);
             core=(i/machine.threads_count)%machine.cores_count;
             thread=i%machine.threads_count;
-            if(machine.cpus[cpu].cores[core].threads[thread].partido.size==0){
+            if(machine.cpus[cpu].cores[core].threads[thread].partido.size==0&&machine.cpus[cpu].cores[core].threads[thread].process.id!=0){
                 select->cpu=cpu;
                 select->core=core;
                 select->thread=thread;
@@ -43,7 +43,7 @@ void asignar_trabajo(t_select *select, uint8_t partido){
             cpu=i/(machine.cores_count*machine.threads_count);
             core=(i/machine.threads_count)%machine.cores_count;
             thread=i%machine.threads_count;
-            if(machine.cpus[cpu].cores[core].threads[thread].queue.size==0){
+            if(machine.cpus[cpu].cores[core].threads[thread].queue.size==0&&machine.cpus[cpu].cores[core].threads[thread].process.id==0){
                 select->cpu=cpu;
                 select->core=core;
                 select->thread=thread;
@@ -52,10 +52,14 @@ void asignar_trabajo(t_select *select, uint8_t partido){
             else{
                 if(machine.cpus[cpu].cores[core].threads[thread].queue.size<min){
                     pos=i;
+                    min=machine.cpus[cpu].cores[core].threads[thread].queue.size;
                 }
             }
         }
     }
+    select->cpu=pos/(machine.cores_count*machine.threads_count);
+    select->core=(pos/machine.threads_count)%machine.cores_count;
+    select->thread=pos%machine.threads_count;
 }
 
 void* scheduler_thread(void* args) { //quizas cambiar el scheduler de hilo a funcion
@@ -87,7 +91,7 @@ void* scheduler_thread(void* args) { //quizas cambiar el scheduler de hilo a fun
             thread=i%machine.threads_count;
             if(!machine.cpus[cpu].cores[core].threads[thread].process.id==0) machine.cpus[cpu].cores[core].threads[thread].process.quantum+=scheduler_args->ciclos_timer;//TEMPORAL, TIENE QUE AUMENTAR EL QUANTUM EN LA EJECUCION NO EN EL SCHEDULER
             if(is_empty_pcb(&machine.cpus[cpu].cores[core].threads[thread].queue) && is_empty_pcb(&machine.cpus[cpu].cores[core].threads[thread].partido) && machine.cpus[cpu].cores[core].threads[thread].process.id==0)continue;
-            if(machine.cpus[cpu].cores[core].threads[thread].process.quantum>=machine.quantum){ //Si se acaba el quantum
+            if(machine.cpus[cpu].cores[core].threads[thread].process.quantum>=machine.quantum ||machine.cpus[cpu].cores[core].threads[thread].process.id==0){ //Si se acaba el quantum
                 if(!is_empty_pcb(&machine.cpus[cpu].cores[core].threads[thread].queue)){
                    dequeue_pcb(&machine.cpus[cpu].cores[core].threads[thread].queue, &pcb); 
                 }
