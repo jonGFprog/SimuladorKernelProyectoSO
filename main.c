@@ -106,6 +106,7 @@ int main (int argc, char *argv[]) {
     
     t_scheduler_args scheduler_args;
     scheduler_args.verbose=scheduler_verb;
+    scheduler_args.ciclos_timer=timer_scheduler_frec;
 
     t_timer_args timer_scheduler_args;
     timer_scheduler_args.ciclos=timer_scheduler_frec;
@@ -116,6 +117,7 @@ int main (int argc, char *argv[]) {
     
 
     pthread_create(&clock_id,NULL,clock_thread, &clock_args);
+    usleep(100); //creo que arregla el problema de que a veces no se inicia el clock. 
     pthread_create(&timer_procgen_id,NULL,timer_thread, &timer_procgen_args);
     pthread_create(&procgen_id,NULL,procgen_thread, &procgen_args);
     pthread_create(&timer_scheduler_id,NULL,timer_thread, &timer_scheduler_args);    
@@ -132,7 +134,17 @@ int main (int argc, char *argv[]) {
             else if(strcmp(buf, "print") == 0){
                 print_machine(&machine);
             }
+            else if(strcmp(buf, "pinfo") == 0){
+                print_process_info(&machine);
+            }
+            else if(strcmp(buf, "minfo") == 0){
+                print_machine_info(&machine);
+            }
             else if(strcmp(buf, "p") == 0){
+                if(pausa==1){
+                    printf("\nya esta pausado\n");
+                    continue;
+                }
                 printf("\nPAUSA\n");
                 pthread_mutex_lock(&mutex_pausa);
                 pausa=1;

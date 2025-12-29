@@ -11,14 +11,17 @@ politica Stalin:
 
     CPU:
         -Para decidir a que hilo se asigna cada proceso
-            -Usa un bitmap para saber si esta libre el hilo
+            -Usa un array de int para saber si esta libre el hilo
+                -Cada hilo es una posicion del array, si el valor es 0 es que esta libre (pcb_nulo en ejecucion), si no esta libre es la cantidad de procesos en la cola + el que esta en ejecucion
+                -Cualquier pcb que no sea el nulo en ejecucion cuenta como 1
             -Elije el primero que esta libre
             -Si no, elije el que menos procesos tenga pendientes
-        -Cada CPU tendra su propia cola de procesos, esta cola sigue la politica RR
-        -Tambien habra una cola de procesos del partido
+        -Cada hilo tendra su propia cola de procesos, esta cola sigue la politica RR
+        -Tambien habra una cola de procesos del partido por hilo
     
     Expulsion
-        -Los procesos, al tener los mismos derechos, no pueden expulsar a otros.
+        -Los procesos, al tener los mismos derechos, no pueden expulsar a otros, solo se iran si se les acaba el quantum.
+            -Si nadie quiere entrar, no se le expulsa pero no se le asigna mas quantum. Simplemente no se le expulsa hasta que alguien quiera entrar
         -Un proceso del partido quiere la CPU, el proceso en CPU, por su lealtad al partido, saldra de la CPU dejandole paso al proceso del partido.
         -Un proceso expulsado se pondra como ultimo de la cola
         -Un proceso del partido no puede expulsar a otro del partido, pero, si el proceso tarda mas ciclos en salir de la CPU que paciencia tiene el 

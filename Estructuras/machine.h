@@ -32,7 +32,7 @@ typedef struct
     int cpus_count;
     int cores_count;
     int threads_count;
-    //int *libres;
+    int *libres; 
     int total_threads; //cpu*cores*threads
     __uint16_t quantum; //tiempo de cpu asignado por el lider
 } t_machine;
@@ -40,4 +40,6 @@ typedef struct
 t_machine machine;
 void init_machine(t_machine *machine, int cpus, int cores, int threads,int queue_size);
 void print_machine(t_machine *machine);
+void print_process_info(t_machine *machine);
+void print_machine_info(t_machine *machine);
 #endif

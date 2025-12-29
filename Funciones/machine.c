@@ -6,6 +6,7 @@ void init_machine(t_machine *machine, int cpus, int cores, int threads, int queu
     machine->cores_count=cores;
     machine->threads_count=threads;
     int size=cpus*cores*threads;
+    machine->libres=calloc(2*size,sizeof(int));
     machine->total_threads=size;
     machine->quantum=150;
     machine->cpus=malloc(cpus*sizeof(t_cpu));
@@ -42,5 +43,33 @@ void print_machine(t_machine *machine){
             }   
         }
     }
+}
+
+void print_process_info(t_machine *machine){
+    int cpu,core,thread;
+    for(int i=0;i<machine->cpus_count;i++){
+        for(int j=0;j<machine->cores_count;j++){
+            for(int k=0;k<machine->threads_count;k++){
+                printf("\n+-------------------------------------------------+\n");
+                printf("|         cpu %d      core %d    thread %d          |\n",i,j,k);
+                printf("|           pcb ejecucion id %d                     |\n",machine->cpus[i].cores[j].threads[k].process.id);
+                printf("|                   patido: %d                      |\n",machine->cpus[i].cores[j].threads[k].process.partido);
+                if(machine->cpus[i].cores[j].threads[k].process.partido){
+                printf("|                paciencia: %d                      |\n",machine->cpus[i].cores[j].threads[k].process.paciencia);    
+                }
+                printf("|                  quantum: %d                      |\n",machine->cpus[i].cores[j].threads[k].process.quantum);
+                printf("|            ciclos_usados: %d                      |\n",machine->cpus[i].cores[j].threads[k].process.ciclos_usados);
+                printf("|         ciclos_asignados: %d                      |\n",machine->cpus[i].cores[j].threads[k].process.ciclos_asignados);
+                printf("+-------------------------------------------------+\n");
+            }   
+        }
+    }
+}
+void print_machine_info(t_machine *machine){
+    printf("\n+-------------------------------------------------+\n");
+    printf("|        cpus %d     cores %d   threads %d          |\n",machine->cpus_count,machine->cores_count,machine->threads_count);
+    printf("|            total threads: %d                      |\n",machine->total_threads);
+    printf("|                  quantum: %d                      |\n",machine->quantum);
+    printf("+-------------------------------------------------+\n");
 }
 #endif
