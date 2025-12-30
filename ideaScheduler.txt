@@ -1,21 +1,21 @@
 politica Stalin:
-    -El partido asigna al proceso un tiempo de ejecución maximo. En caso de no terminar en ese tiempo, se le ejecuta. 
+    -El partido asigna al proceso un tiempo de ejecución maximo. En caso de no terminar en ese tiempo, se le ejecuta (no se le vuelve a asignar a la cola).
+        -El tiempo asignado se puede modificar y es igual para todos. 
     -Si termina antes del tiempo asignado no se mete ningun otro proceso a la cpu, el tiempo que asigna el partido es siempre perfecto.
-    -Cada proceso tiene derecho a un numero de ciclos asignados por el lider antes de su expulsion de cpu.
-        -No es el numero maximo ciclos antes de la ejecucion, es el quantum.
+    -Cada proceso tiene derecho a un quantum decidido por el lider antes de su expulsion de cpu.
         -Los delirios del lider deciden el numero de ciclos (rand() dentro de un margen de valores (editables))
         -Cada x numero de ciclos (editable) el lider decide el nuevo numero de ciclos
 
 
-    No hay prioridades porque todos son iguales, menos los procesos del partido, esos tienen mayor prioridad, no tienen limite de tiempo y pueden expulsar a otros procesos
+    No hay prioridades porque todos son iguales, menos los procesos del partido, esos tienen mayor prioridad, no tienen limite de tiempo (ni quantum ni ciclos maximos)y pueden expulsar a otros procesos
 
-    CPU:
+    Hilo:
         -Para decidir a que hilo se asigna cada proceso
             -Usa un array de int para saber si esta libre el hilo
                 -Cada hilo es una posicion del array, si el valor es 0 es que esta libre (pcb_nulo en ejecucion), si no esta libre es la cantidad de procesos en la cola + el que esta en ejecucion
                 -Cualquier pcb que no sea el nulo en ejecucion cuenta como 1
-            -Elije el primero que esta libre
-            -Si no, elije el que menos procesos tenga pendientes
+            -Elije el primero que esta libre (de ambas colas, la del partido y la normal)
+            -Si no, elije el que menos procesos tenga pendientes (de su cola)
         -Cada hilo tendra su propia cola de procesos, esta cola sigue la politica RR
         -Tambien habra una cola de procesos del partido por hilo
     

@@ -10,19 +10,27 @@ int main (int argc, char *argv[]) {
     pcbnulo.id=0;
     pcbnulo.quantum=0;
     pcbnulo.fin=7;
-    pcbnulo.ciclos_asignados=UINT16_MAX;
     pcbnulo.ciclos_usados=0;
     //valores por defecto
     int timer_procgen_frec=32; //(ciclos de reloj para que el timer interrumpa)
     int procgen_max_size=512;
     int procgen_verb=0;
+    int procgen_paciencia=850;
+    float procgen_prob_partido=0.1;
     int clk_frec=100000;
     int clk_verb=0;
     int timer_scheduler_frec=30;
     int scheduler_verb=0;
+    //machine
     int cpus=2;
     int cores=2;
     int threads=2;
+
+    int queue_size=150;
+    float prob_purga=0.5;
+    int ciclos_cambio=4500;
+    int margen_rnd_quantum[2]={90,150};
+    int ciclos_maximos=750;
     
     for(int i=1;i<argc;i++){
         if(strcmp(argv[i],"--clock-frec")==0||strcmp(argv[i],"-cf")==0){
@@ -74,9 +82,39 @@ int main (int argc, char *argv[]) {
                 exit(1);
             }
         }
+        else if(strcmp(argv[i],"--queue-size")==0||strcmp(argv[i],"-qS")==0){
+            i++;
+            queue_size=atoi(argv[i]);
+        }
+        else if(strcmp(argv[i],"--prob-purga")==0||strcmp(argv[i],"-pp")==0){
+            i++;
+            prob_purga=atoi(argv[i]);
+        }
+        else if(strcmp(argv[i],"--ciclos-cambio-quantum")==0||strcmp(argv[i],"-ccq")==0){
+            i++;
+            ciclos_cambio=atoi(argv[i]);
+        }
+        else if(strcmp(argv[i],"--margen-quantum")==0||strcmp(argv[i],"-mq")==0){
+            i++;
+            margen_rnd_quantum[0]=atoi(argv[i]);
+            i++;
+            margen_rnd_quantum[1]=atoi(argv[i]);
+        }
+        else if(strcmp(argv[i],"--ciclos-maximos")==0||strcmp(argv[i],"-cm")==0){
+            i++;
+            ciclos_maximos=atoi(argv[i]);
+        }
+        else if(strcmp(argv[i],"--procgen-paciencia")==0||strcmp(argv[i],"-p")==0){
+            i++;
+            procgen_paciencia=atoi(argv[i]);
+        }
+        else if(strcmp(argv[i],"--procgen-prob-partido")==0||strcmp(argv[i],"-ppp")==0){
+            i++;
+            procgen_paciencia=atoi(argv[i]);
+        }
     }
-
-    init_machine(&machine, cpus,cores,threads,150); //numero arbitrario temporal
+    
+    init_machine(&machine, cpus,cores,threads,queue_size,prob_purga,ciclos_cambio,margen_rnd_quantum,ciclos_maximos); 
     pthread_mutex_init(&mutex_pausa,NULL);
     pthread_cond_init(&cond_pausa,NULL);
     pausa=0;
@@ -96,6 +134,8 @@ int main (int argc, char *argv[]) {
     t_procgen_args procgen_args;
     procgen_args.max_size=procgen_max_size;
     procgen_args.verbose=procgen_verb;
+    procgen_args.paciencia=procgen_paciencia;
+    procgen_args.prob_partido=procgen_prob_partido;
 
     t_timer_args timer_procgen_args;
     timer_procgen_args.ciclos=timer_procgen_frec;

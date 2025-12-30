@@ -38,6 +38,8 @@ typedef struct
 typedef struct 
 {
     int max_size;
+    int paciencia;
+    float prob_partido;
     int verbose;
 } t_procgen_args;
 
@@ -46,11 +48,6 @@ typedef struct
     int verbose;
     //fase2
     int ciclos_timer; //Probablemente temporal
-    int ciclos_cambio_quantum; //ciclos antes de que el lider decida el nuevo quantum; Seguramente sea mejor que se encarge el process generator
-    int margen_rnd_quantum[2]; //probablemente luego lo mueva
-
-
-
 } t_scheduler_args;
 
 #endif

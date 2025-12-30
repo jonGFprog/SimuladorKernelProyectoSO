@@ -1,7 +1,7 @@
 #include "../Estructuras/machine.h"
 #ifndef MACHINE_C
 #define MACHINE_C
-void init_machine(t_machine *machine, int cpus, int cores, int threads, int queue_size){
+void init_machine(t_machine *machine, int cpus, int cores, int threads, int queue_size,float prob_purga, int ciclos_cambio, int margen_rnd_quantum[2],int ciclos_maximos){
     machine->cpus_count=cpus;
     machine->cores_count=cores;
     machine->threads_count=threads;
@@ -10,6 +10,12 @@ void init_machine(t_machine *machine, int cpus, int cores, int threads, int queu
     machine->total_threads=size;
     machine->quantum=150;
     machine->cpus=malloc(cpus*sizeof(t_cpu));
+    machine->prob_purga=prob_purga;
+    machine->ciclos_cambio_quantum=ciclos_cambio;
+    machine->margen_rnd_quantum[0]=margen_rnd_quantum[0];
+    machine->margen_rnd_quantum[1]=margen_rnd_quantum[1];
+    cambio_quantum(margen_rnd_quantum);
+    machine->ciclos_maximos_asignados=ciclos_maximos;
     for(int i=0;i<cpus;i++){
         machine->cpus[i].cores=malloc(cores*sizeof(t_core));
         for(int j=0;j<cores;j++){
@@ -21,6 +27,11 @@ void init_machine(t_machine *machine, int cpus, int cores, int threads, int queu
             }   
         }
     }
+}
+
+void cambio_quantum(int margen[2]){
+    int quantum=margen[0]+ rand()%margen[1];
+    machine.quantum=quantum;
 }
 
 void print_machine(t_machine *machine){
@@ -59,7 +70,7 @@ void print_process_info(t_machine *machine){
                 }
                 printf("|                  quantum: %d                      |\n",machine->cpus[i].cores[j].threads[k].process.quantum);
                 printf("|            ciclos_usados: %d                      |\n",machine->cpus[i].cores[j].threads[k].process.ciclos_usados);
-                printf("|         ciclos_asignados: %d                      |\n",machine->cpus[i].cores[j].threads[k].process.ciclos_asignados);
+                printf("|         ciclos_asignados: %d                      |\n",machine->ciclos_maximos_asignados);
                 printf("+-------------------------------------------------+\n");
             }   
         }
