@@ -4,6 +4,7 @@
 #include "Hilos/timer.c"
 #include "Hilos/processGenerator.c"
 #include "Hilos/scheduler.c"
+#include "Hilos/machine_thread.c"
 #include <string.h>
 
 int main (int argc, char *argv[]) {
@@ -117,6 +118,7 @@ int main (int argc, char *argv[]) {
     init_machine(&machine, cpus,cores,threads,queue_size,prob_purga,ciclos_cambio,margen_rnd_quantum,ciclos_maximos); 
     pthread_mutex_init(&mutex_pausa,NULL);
     pthread_cond_init(&cond_pausa,NULL);
+    pthread_mutex_init(&mutex_dispacher,NULL);
     pausa=0;
 
     pthread_t clock_id;
@@ -124,6 +126,7 @@ int main (int argc, char *argv[]) {
     pthread_t procgen_id;
     pthread_t timer_scheduler_id;
     pthread_t scheduler_id;
+    pthread_t machine_thread_id;
     printf("Parametros iniciales\nclk_frec: %d\ntimer_procgen_frec: %d\tprocgen_max_size: %d\tprocgen_verb: %d\ntimer_scheduler_frec: %d\tscheduler_verb: %d\n"
            ,clk_frec,timer_procgen_frec,procgen_max_size,procgen_verb,timer_scheduler_frec,scheduler_verb);
     
@@ -162,6 +165,7 @@ int main (int argc, char *argv[]) {
     pthread_create(&procgen_id,NULL,procgen_thread, &procgen_args);
     pthread_create(&timer_scheduler_id,NULL,timer_thread, &timer_scheduler_args);    
     pthread_create(&scheduler_id,NULL,scheduler_thread, &scheduler_args);
+    pthread_create(&machine_thread_id,NULL,machine_thread, NULL);
     
     
     char buf[512];
@@ -216,6 +220,11 @@ int main (int argc, char *argv[]) {
     pthread_join(timer_scheduler_id,NULL);
     printf("timer del scheduler detenido...\n");
   
+    pthread_mutex_unlock(&mutex_dispacher);
+    pthread_cancel(machine_thread_id);
+    pthread_join(machine_thread_id,NULL);
+    printf("machine detenido...\n");
+
     pthread_cancel(clock_id);
     pthread_join(clock_id,NULL);
     printf("clock detenido...\n");

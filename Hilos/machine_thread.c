@@ -1,0 +1,32 @@
+#include <stdio.h>
+#include <unistd.h>
+#include "../Estructuras/thread_args.h"
+#include <pthread.h>
+#include "../Funciones/machine.c"
+
+void* machine_thread(void* args) {
+    pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
+    int cpu,core,thread;
+    //t_timer_args *timer_args=args;
+    while(1){
+        
+        for(int i=0;i<machine.total_threads;i++){
+            cpu=i/(machine.cores_count*machine.threads_count);
+            core=(i/machine.threads_count)%machine.cores_count;
+            thread=i%machine.threads_count;
+            if(machine.cpus[cpu].cores[core].threads[thread].process.id!=0&&!machine.cpus[cpu].cores[core].threads[thread].process.partido){
+                pthread_mutex_lock(&mutex_dispacher);
+                machine.cpus[cpu].cores[core].threads[thread].process.quantum++;
+                machine.cpus[cpu].cores[core].threads[thread].process.ciclos_usados++;
+                pthread_mutex_unlock(&mutex_dispacher);
+            }
+           
+            //EJECUTAR
+        }
+        //printf("quantum++ \n");
+        done++;
+        pthread_cond_signal(&cond_clock);
+        pthread_cond_wait(&cond_clock2,&mutex_clock);
+    }
+        
+}

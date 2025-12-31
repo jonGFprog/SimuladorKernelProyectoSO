@@ -30,7 +30,7 @@ void init_machine(t_machine *machine, int cpus, int cores, int threads, int queu
 }
 
 void cambio_quantum(int margen[2]){
-    int quantum=margen[0]+ rand()%margen[1];
+    int quantum=margen[0]+ rand()% (margen[1]-margen[0]);
     machine.quantum=quantum;
 }
 

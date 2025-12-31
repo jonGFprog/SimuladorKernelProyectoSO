@@ -7,12 +7,12 @@
 
 
 void dispacher(int cpu, int core, int thread, t_pcb pcb, t_pcb *exit_pcb, int verbose){
-    /*  machine.cpus[cpu].cores[core].threads[thread].process=pcb;
-    if(machine.libres[cpu*core*thread-1]>0){
-        machine.libres[cpu*core*thread-1]--;
-    }*/
+    
     *exit_pcb=machine.cpus[cpu].cores[core].threads[thread].process;
+    pthread_mutex_lock(&mutex_dispacher);
     machine.cpus[cpu].cores[core].threads[thread].process=pcb;
+    pthread_mutex_unlock(&mutex_dispacher);
+    
     if(verbose) printf("PCB id:%d asignado a %d,%d,%d\n",machine.cpus[cpu].cores[core].threads[thread].process.id,cpu,core,thread);
 
 }
@@ -73,14 +73,10 @@ void* scheduler_thread(void* args) { //quizas cambiar el scheduler de hilo a fun
             cpu=i/(machine.cores_count*machine.threads_count);
             core=(i/machine.threads_count)%machine.cores_count;
             thread=i%machine.threads_count;
-            if(machine.cpus[cpu].cores[core].threads[thread].process.id!=0&&!machine.cpus[cpu].cores[core].threads[thread].process.partido){
-                machine.cpus[cpu].cores[core].threads[thread].process.quantum+=scheduler_args->ciclos_timer;//TEMPORAL, TIENE QUE AUMENTAR EL QUANTUM EN LA EJECUCION NO EN EL SCHEDULER
-                machine.cpus[cpu].cores[core].threads[thread].process.ciclos_usados+=scheduler_args->ciclos_timer;
-            }
 
             //TEMPORAL, por el momento se considerara que un proceso del partido ha acabado cuando llegue a los ciclos asignados
             if(machine.cpus[cpu].cores[core].threads[thread].process.partido){
-                machine.cpus[cpu].cores[core].threads[thread].process.ciclos_usados+=scheduler_args->ciclos_timer; //Debe de aumentar en la ejecucion
+                machine.cpus[cpu].cores[core].threads[thread].process.ciclos_usados+=scheduler_args->ciclos_timer; 
             }
 
             if(is_empty_pcb(&machine.cpus[cpu].cores[core].threads[thread].queue) && is_empty_pcb(&machine.cpus[cpu].cores[core].threads[thread].partido) && machine.cpus[cpu].cores[core].threads[thread].process.id==0)continue;
@@ -117,7 +113,11 @@ void* scheduler_thread(void* args) { //quizas cambiar el scheduler de hilo a fun
                 dispacher(cpu,core,thread,pcb,&pcb,scheduler_args->verbose);
                 printf("expulsado pcb %d del thread (%d,%d,%d)\n",pcb.id,cpu,core,thread);
                 if(pcb.ciclos_usados<machine.ciclos_maximos_asignados){
+
+
                     pcb.quantum=0;
+
+
                     enqueue_pcb(&machine.cpus[cpu].cores[core].threads[thread].queue, pcb);
                     if(scheduler_args->verbose){printf("reasignando pcb %d a la queue (%d,%d,%d)\n",pcb.id,cpu,core,thread);}
                 }
