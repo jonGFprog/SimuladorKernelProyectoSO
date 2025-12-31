@@ -89,7 +89,7 @@ int main (int argc, char *argv[]) {
         }
         else if(strcmp(argv[i],"--prob-purga")==0||strcmp(argv[i],"-pp")==0){
             i++;
-            prob_purga=atoi(argv[i]);
+            prob_purga=atof(argv[i]);
         }
         else if(strcmp(argv[i],"--ciclos-cambio-quantum")==0||strcmp(argv[i],"-ccq")==0){
             i++;
@@ -111,7 +111,7 @@ int main (int argc, char *argv[]) {
         }
         else if(strcmp(argv[i],"--procgen-prob-partido")==0||strcmp(argv[i],"-ppp")==0){
             i++;
-            procgen_paciencia=atoi(argv[i]);
+            procgen_prob_partido=atof(argv[i]);
         }
     }
     

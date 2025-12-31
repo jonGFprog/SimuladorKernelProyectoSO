@@ -20,7 +20,8 @@ void* procgen_thread(void* args) {
         pcb.fin=0;
         pcb.partido=0;
         prob = rand() / (double)RAND_MAX;
-        if(prob<procgen_args->prob_partido){ //hacerlo modificable
+        if(procgen_args->verbose)printf("prob = %f, prob_partido = %f\n", prob, procgen_args->prob_partido);
+        if(prob<procgen_args->prob_partido){ 
             pcb.partido=1;
             pcb.paciencia=procgen_args->paciencia;
         }
