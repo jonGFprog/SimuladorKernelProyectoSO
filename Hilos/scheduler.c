@@ -37,15 +37,25 @@ void asignar_trabajo(t_pcb *pcb, uint8_t partido, int verbose){
     cpu=pos/(machine.cores_count*machine.threads_count);
     core=(pos/machine.threads_count)%machine.cores_count;
     thread=pos%machine.threads_count;
-    if(pcb->partido){
-        enqueue_pcb(&machine.cpus[cpu].cores[core].threads[thread].partido,*pcb);
-        machine.libres[partido*machine.total_threads+pos]++;
-        if(verbose){printf("pcb %d añadido al partido (%d,%d,%d)\n",pcb->id,cpu,core,thread);} 
+    if(partido){
+        if(enqueue_pcb(&machine.cpus[cpu].cores[core].threads[thread].partido,*pcb)){
+            machine.libres[partido*machine.total_threads+pos]++;
+            if(verbose)printf("pcb %d añadido al partido (%d,%d,%d)\n",pcb->id,cpu,core,thread); 
+        }
+        else{
+            printf("ERROR, queue del partido (%d,%d,%d) llena, pcb %d NO ha sido añadido\n",cpu,core,thread,pcb->id);
+        }
+        
     }
     else{
-        enqueue_pcb(&machine.cpus[cpu].cores[core].threads[thread].queue,*pcb);
-        machine.libres[partido*machine.total_threads+pos]++;
-        if(verbose){printf("pcb %d añadido a la queue (%d,%d,%d)\n",pcb->id,cpu,core,thread);}
+        if(enqueue_pcb(&machine.cpus[cpu].cores[core].threads[thread].queue,*pcb)){
+            machine.libres[partido*machine.total_threads+pos]++;
+            if(verbose)printf("pcb %d añadido a la queue (%d,%d,%d)\n",pcb->id,cpu,core,thread);
+        }
+        else{
+            printf("ERROR, queue (%d,%d,%d) llena, pcb %d NO ha sido añadido\n",cpu,core,thread,pcb->id);
+        }
+        
     }
 }
 

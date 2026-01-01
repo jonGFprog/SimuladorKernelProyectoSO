@@ -32,7 +32,7 @@ void* procgen_thread(void* args) {
             //pthread_cond_signal((void *)procgen_args->cond_sch);
         }
         else{
-            printf("pcb error\n");
+            printf("pcb error, processs_queue llena\n");
         }
     }
     

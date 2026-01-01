@@ -33,7 +33,7 @@ int dequeue_pcb(t_pcb_queue* pcb_queue, t_pcb* pcb){
     if(is_empty_pcb(pcb_queue)){ //esto igual lo quito ns
         t_pcb null_pcb;
         *pcb=null_pcb;
-        return 1;
+        return 0;
     }
     
     *pcb = pcb_queue->pcb[pcb_queue->first];
