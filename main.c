@@ -220,8 +220,8 @@ int main (int argc, char *argv[]) {
     pthread_join(timer_scheduler_id,NULL);
     printf("timer del scheduler detenido...\n");
   
-    pthread_mutex_unlock(&mutex_dispacher);
     pthread_cancel(machine_thread_id);
+    pthread_mutex_unlock(&mutex_dispacher);
     pthread_join(machine_thread_id,NULL);
     printf("machine detenido...\n");
 
