@@ -1,4 +1,5 @@
 #include "../Estructuras/machine.h"
+#include "tlb.c"
 #ifndef MACHINE_C
 #define MACHINE_C
 void init_machine(t_machine *machine, int cpus, int cores, int threads, int queue_size,float prob_purga, int ciclos_cambio, int margen_rnd_quantum[2],int ciclos_maximos){
@@ -24,6 +25,7 @@ void init_machine(t_machine *machine, int cpus, int cores, int threads, int queu
                 machine->cpus[i].cores[j].threads[k].process=pcbnulo;
                 init_pcb_queue(&machine->cpus[i].cores[j].threads[k].queue,queue_size);
                 init_pcb_queue(&machine->cpus[i].cores[j].threads[k].partido,queue_size);
+                init_tlb(&machine->cpus[i].cores[j].threads[k].mmu.tlb);
             }   
         }
     }

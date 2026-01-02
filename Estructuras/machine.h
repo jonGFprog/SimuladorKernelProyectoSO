@@ -1,5 +1,6 @@
 #include "pcb.h"
 #include "processQueue.h"
+#include "mmu.h"
 #ifndef MACHINE_H
 #define MACHINE_H
 
@@ -13,7 +14,10 @@ typedef struct
     t_pcb process;
     t_pcb_queue partido;
     t_pcb_queue queue;
-    
+    int pc; 
+    uintptr_t ptbr; //puntero a tabla de paginas
+    uint32_t ir; //instruction register
+    t_mmu mmu;
 }t_thread;
 
 typedef struct 

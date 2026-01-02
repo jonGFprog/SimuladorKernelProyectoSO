@@ -6,7 +6,7 @@
 #include "Hilos/scheduler.c"
 #include "Hilos/machine_thread.c"
 #include <string.h>
-
+#define MAX_PALABRAS 16777216;
 int main (int argc, char *argv[]) {
     pcbnulo.id=0;
     pcbnulo.quantum=0;
@@ -22,17 +22,19 @@ int main (int argc, char *argv[]) {
     int clk_verb=0;
     int timer_scheduler_frec=30;
     int scheduler_verb=0;
-    //machine
+    //Machine
     int cpus=2;
     int cores=2;
     int threads=2;
-
     int queue_size=150;
     float prob_purga=0.5;
     int ciclos_cambio=4500;
     int margen_rnd_quantum[2]={90,150};
     int ciclos_maximos=750;
     
+    //Memoria
+    int palabras_pagina=64; //palabras por cada pagina
+
     for(int i=1;i<argc;i++){
         if(strcmp(argv[i],"--clock-frec")==0||strcmp(argv[i],"-cf")==0){
             i++;
@@ -215,13 +217,14 @@ int main (int argc, char *argv[]) {
     printf("timer del processGenerator detenido...\n");
 
     pthread_cancel(timer_scheduler_id);
-    pthread_cond_broadcast(&cond_clock2);
+    pthread_cond_broadcast(&cond_clock2); 
     pthread_mutex_unlock(&mutex_clock);
     pthread_join(timer_scheduler_id,NULL);
     printf("timer del scheduler detenido...\n");
   
-    pthread_mutex_unlock(&mutex_dispacher);
+    
     pthread_cancel(machine_thread_id);
+    pthread_mutex_unlock(&mutex_dispacher);
     pthread_join(machine_thread_id,NULL);
     printf("machine detenido...\n");
 
