@@ -6,7 +6,7 @@
 #define TLB_MISS -1
 #define HASH_SIZE 256
 //TLB va a ser una hashtable con lru para el remplazo
-typedef struct{
+typedef struct t_nodo_tlb{ 
     uint32_t frame;
     uint32_t page;
     struct t_nodo_tlb* next_colision;
