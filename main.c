@@ -5,8 +5,9 @@
 #include "Hilos/processGenerator.c"
 #include "Hilos/scheduler.c"
 #include "Hilos/machine_thread.c"
+#include "Estructuras/physical_memory.h"
 #include <string.h>
-#define MAX_PALABRAS 16777216;
+
 int main (int argc, char *argv[]) {
     pcbnulo.id=0;
     pcbnulo.quantum=0;
@@ -34,7 +35,7 @@ int main (int argc, char *argv[]) {
     
     //Memoria
     int palabras_pagina=64; //palabras por cada pagina
-
+    int num_paginas=32; 
     for(int i=1;i<argc;i++){
         if(strcmp(argv[i],"--clock-frec")==0||strcmp(argv[i],"-cf")==0){
             i++;
@@ -117,6 +118,10 @@ int main (int argc, char *argv[]) {
         }
     }
     
+    if(palabras_pagina*num_paginas*queue_size*cpus*cores*threads >= RESERVA_KERNEL){
+        printf("No hay suficiente memoria, palabras_pagina*num_paginas*queue_size*cpus*cores*threads debe ser menor que %d",RESERVA_KERNEL);
+        return 1;
+    }
     init_machine(&machine, cpus,cores,threads,queue_size,prob_purga,ciclos_cambio,margen_rnd_quantum,ciclos_maximos); 
     pthread_mutex_init(&mutex_pausa,NULL);
     pthread_cond_init(&cond_pausa,NULL);

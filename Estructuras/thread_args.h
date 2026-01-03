@@ -8,7 +8,7 @@
 #define SIGFIN SIGUSR1 
 pthread_mutex_t mutex_clock;
 pthread_mutex_t mutex_pausa;
-pthread_mutex_t mutex_procgen;
+pthread_mutex_t mutex_loader;
 pthread_mutex_t mutex_scheduler;
 pthread_mutex_t mutex_dispacher;
 int N_TEMP=3;
@@ -17,7 +17,7 @@ int pausa;
 pthread_cond_t cond_clock;
 pthread_cond_t cond_clock2;
 pthread_cond_t cond_pausa;
-pthread_cond_t cond_procgen;
+pthread_cond_t cond_loader;
 pthread_cond_t cond_scheduler;
 
 
@@ -42,7 +42,7 @@ typedef struct
     int paciencia;
     float prob_partido;
     int verbose;
-} t_procgen_args;
+} t_loader_args;
 
 typedef struct 
 {
