@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "Hilos/clock.c"
 #include "Hilos/timer.c"
-#include "Hilos/processGenerator.c"
+#include "Hilos/loader.c"
 #include "Hilos/scheduler.c"
 #include "Hilos/machine_thread.c"
 #include "Estructuras/physical_memory.h"
@@ -141,7 +141,7 @@ int main (int argc, char *argv[]) {
     clock_args.frec=clk_frec; //esta en milisegundos
     clock_args.verbose=clk_verb;
 
-    t_procgen_args procgen_args;
+    t_loader_args procgen_args;
     procgen_args.max_size=procgen_max_size;
     procgen_args.verbose=procgen_verb;
     procgen_args.paciencia=procgen_paciencia;
@@ -150,8 +150,8 @@ int main (int argc, char *argv[]) {
     t_timer_args timer_procgen_args;
     timer_procgen_args.ciclos=timer_procgen_frec;
     timer_procgen_args.msg="timer procgen";
-    timer_procgen_args.cond_timer=(uintptr_t)&cond_procgen;
-    timer_procgen_args.mutex_timer=(uintptr_t)&mutex_procgen;
+    timer_procgen_args.cond_timer=(uintptr_t)&cond_loader;
+    timer_procgen_args.mutex_timer=(uintptr_t)&mutex_loader;
     timer_procgen_args.verbose=0;
     
     t_scheduler_args scheduler_args;
