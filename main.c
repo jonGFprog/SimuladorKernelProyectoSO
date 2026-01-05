@@ -16,7 +16,7 @@ int main (int argc, char *argv[]) {
     int timer_procgen_frec=32; //(ciclos de reloj para que el timer interrumpa)
     int procgen_max_size=512;
     int procgen_verb=0;
-    int procgen_paciencia=850;
+    int procgen_paciencia=450;
     float procgen_prob_partido=0.1;
     int clk_frec=100000;
     int clk_verb=0;
@@ -67,7 +67,7 @@ int main (int argc, char *argv[]) {
                 exit(1);
             }
         }
-        else if(strcmp(argv[i],"--cores-count")==0||strcmp(argv[i],"-cc")==0){
+        else if(strcmp(argv[i],"--core-count")==0||strcmp(argv[i],"-cc")==0){
             i++;
             cores=atoi(argv[i]);
             if (cores<1){
@@ -75,7 +75,7 @@ int main (int argc, char *argv[]) {
                 exit(1);
             }
         }
-        else if(strcmp(argv[i],"--threads-count")==0||strcmp(argv[i],"-tc")==0){
+        else if(strcmp(argv[i],"--thread-count")==0||strcmp(argv[i],"-tc")==0){
             i++;
             threads=atoi(argv[i]);
             if (threads<1){
@@ -87,7 +87,7 @@ int main (int argc, char *argv[]) {
             i++;
             queue_size=atoi(argv[i]);
         }
-        else if(strcmp(argv[i],"--prob-purga")==0||strcmp(argv[i],"-pp")==0){
+        else if(strcmp(argv[i],"--prob-purga")==0||strcmp(argv[i],"-pP")==0){
             i++;
             prob_purga=atof(argv[i]);
         }
@@ -105,7 +105,7 @@ int main (int argc, char *argv[]) {
             i++;
             ciclos_maximos=atoi(argv[i]);
         }
-        else if(strcmp(argv[i],"--procgen-paciencia")==0||strcmp(argv[i],"-p")==0){
+        else if(strcmp(argv[i],"--procgen-paciencia")==0||strcmp(argv[i],"-pp")==0){
             i++;
             procgen_paciencia=atoi(argv[i]);
         }
@@ -127,9 +127,18 @@ int main (int argc, char *argv[]) {
     pthread_t timer_scheduler_id;
     pthread_t scheduler_id;
     pthread_t machine_thread_id;
-    printf("Parametros iniciales\nclk_frec: %d\ntimer_procgen_frec: %d\tprocgen_max_size: %d\tprocgen_verb: %d\ntimer_scheduler_frec: %d\tscheduler_verb: %d\n"
-           ,clk_frec,timer_procgen_frec,procgen_max_size,procgen_verb,timer_scheduler_frec,scheduler_verb);
-    
+    //printf("Parametros iniciales\nclk_frec: %d\ntimer_procgen_frec: %d\tprocgen_max_size: %d\tprocgen_verb: %d\ntimer_scheduler_frec: %d\tscheduler_verb: %d\n"
+    //       ,clk_frec,timer_procgen_frec,procgen_max_size,procgen_verb,timer_scheduler_frec,scheduler_verb);
+    printf("Parametros iniciales\n"
+       "procgen: timer_frec=%d\tmax_size=%d\tverb=%d\tpaciencia=%d\tprob_partido=%f\n"
+       "clk: frec=%d\tverb=%d\n"
+       "scheduler: timer_frec=%d\tverb=%d\n"
+       "machine: cpus=%d\tcores=%d\tthreads=%d\tqueue_size=%d\tprob_purga=%f\tciclos_cambio=%d\tmargen_quantum=[%d,%d]\tciclos_max=%d\n",
+       timer_procgen_frec, procgen_max_size, procgen_verb, procgen_paciencia, procgen_prob_partido,
+       clk_frec, clk_verb,
+       timer_scheduler_frec, scheduler_verb,
+       cpus, cores, threads,
+       queue_size, prob_purga, ciclos_cambio, margen_rnd_quantum[0], margen_rnd_quantum[1], ciclos_maximos);
     t_clock_args clock_args;
     clock_args.frec=clk_frec; //esta en milisegundos
     clock_args.verbose=clk_verb;

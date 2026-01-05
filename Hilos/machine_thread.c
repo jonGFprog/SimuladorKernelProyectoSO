@@ -7,6 +7,8 @@
 void* machine_thread(void* args) {
     pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
     int cpu,core,thread;
+    int ciclos_q=0;
+
     //t_timer_args *timer_args=args;
     while(1){
         
@@ -19,6 +21,11 @@ void* machine_thread(void* args) {
                 machine.cpus[cpu].cores[core].threads[thread].process.quantum++;
                 machine.cpus[cpu].cores[core].threads[thread].process.ciclos_usados++;
                 pthread_mutex_unlock(&mutex_dispacher);
+            }
+            ciclos_q++;
+            if(ciclos_q>=machine.ciclos_cambio_quantum){
+                ciclos_q=0;
+                cambio_quantum(machine.margen_rnd_quantum);
             }
            
             //EJECUTAR
