@@ -80,13 +80,29 @@ void* scheduler_thread(void* args) {
             core=(i/machine.threads_count)%machine.cores_count;
             thread=i%machine.threads_count;
 
-            //TEMPORAL, por el momento se considerara que un proceso del partido ha acabado cuando llegue a los ciclos asignados
-            if(machine.cpus[cpu].cores[core].threads[thread].process.partido){
-                machine.cpus[cpu].cores[core].threads[thread].process.ciclos_usados+=scheduler_args->ciclos_timer; 
-            }
-
             if(is_empty_pcb(&machine.cpus[cpu].cores[core].threads[thread].queue) && is_empty_pcb(&machine.cpus[cpu].cores[core].threads[thread].partido) && machine.cpus[cpu].cores[core].threads[thread].process.id==0)continue;
             
+            if(machine.cpus[cpu].cores[core].threads[thread].process.fin==1){ // si ha finalizado
+                if(!is_empty_pcb(&machine.cpus[cpu].cores[core].threads[thread].partido)){
+                    dequeue_pcb(&machine.cpus[cpu].cores[core].threads[thread].partido, &pcb);
+                }
+                else if(!is_empty_pcb(&machine.cpus[cpu].cores[core].threads[thread].queue)){
+                   dequeue_pcb(&machine.cpus[cpu].cores[core].threads[thread].queue, &pcb); 
+                }
+                else{
+                    pcb=pcbnulo;
+                }
+                dispacher(cpu,core,thread,pcb,&pcb,scheduler_args->verbose);
+                machine.libres[pcb.partido*machine.total_threads+i]--;
+                if(scheduler_args->verbose){
+                    printf("El proceso %d ha finalizado\n", pcb.id);
+                    if(pcb.partido) printf("(partido) machine.libres[%d]-- (%d)\n",i,machine.libres[pcb.partido*machine.total_threads+i]);
+
+                    else printf("(queue) machine.libres[%d]-- (%d)\n",i,machine.libres[pcb.partido*machine.total_threads+i]);
+                }
+                 
+                continue;
+            }
             
             if(machine.cpus[cpu].cores[core].threads[thread].process.quantum>=machine.quantum //Si se acaba el quantum 
                 ||machine.cpus[cpu].cores[core].threads[thread].process.id==0 //o pcb nulo

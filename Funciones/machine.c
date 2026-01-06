@@ -64,7 +64,7 @@ void print_process_info(t_machine *machine){
                 printf("\n+-------------------------------------------------+\n");
                 printf("|         cpu %d      core %d    thread %d          |\n",i,j,k);
                 printf("|           pcb ejecucion id %d                     |\n",machine->cpus[i].cores[j].threads[k].process.id);
-                printf("|                   patido: %d                      |\n",machine->cpus[i].cores[j].threads[k].process.partido);
+                printf("|                   partido: %d                      |\n",machine->cpus[i].cores[j].threads[k].process.partido);
                 if(machine->cpus[i].cores[j].threads[k].process.partido){
                 printf("|                paciencia: %d                      |\n",machine->cpus[i].cores[j].threads[k].process.paciencia);    
                 }

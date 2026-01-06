@@ -22,6 +22,15 @@ void* machine_thread(void* args) {
                 machine.cpus[cpu].cores[core].threads[thread].process.ciclos_usados++;
                 pthread_mutex_unlock(&mutex_dispacher);
             }
+            //TEMPORAL, por el momento se considerara que un proceso del partido ha acabado cuando llegue a los ciclos asignados. QUITAR EN LA PARTE3
+                if(machine.cpus[cpu].cores[core].threads[thread].process.partido){
+                    pthread_mutex_lock(&mutex_dispacher);
+                    machine.cpus[cpu].cores[core].threads[thread].process.ciclos_usados++; 
+                    if(machine.cpus[cpu].cores[core].threads[thread].process.ciclos_usados==machine.ciclos_maximos_asignados){
+                        machine.cpus[cpu].cores[core].threads[thread].process.fin=1;
+                    }
+                    pthread_mutex_unlock(&mutex_dispacher);
+                }
             ciclos_q++;
             if(ciclos_q>=machine.ciclos_cambio_quantum){
                 ciclos_q=0;
